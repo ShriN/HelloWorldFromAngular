@@ -1,0 +1,244 @@
+﻿<!--<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body ng-app="demoApp" ng-init="names=['shrikant','umakant','Suhas','Sanket']">
+    <script src="js/angular.min.js"></script>
+    Name:
+    <br />
+    <input type="text" ng-model="name" />{{name}}
+    <ul>
+        <li ng-repeat="nm in names">For : {{nm}}</li>
+    </ul>
+
+    <br />
+    Filtering example :
+    <br ng-init="customers=[{Name:'shrikant', City:'Warud'},{Name:'umakant', City:'Warud'},{Name:'Suhas', City:'Dhaga'},{Name:'Sanket', City:'Amt'}]" />
+    Filter by Name :
+    <input type="text" ng-model="filterText" />
+    <ul>
+        <li ng-repeat="cust in customers | filter:filterText | orderBy:'Name'">{{cust.Name | uppercase }} - {{cust.City | lowercase }}</li>
+    </ul>
+
+    <br />
+    Controller-ViewModel Example -
+
+    <div ng-controller="SimpleController">
+        Filter by Name :
+        <input type="text" ng-model="filterText" />
+        <ul>
+            <li ng-repeat="fd in friends | filter:filterText | orderBy:'Name'">{{fd.Name }} - {{fd.City }}</li>
+        </ul>
+    </div>
+    <script>
+        function SimpleController($scope) {
+            $scope.friends = [{ Name: 'shrikant', City: 'Warud' },
+                { Name: 'umakant', City: 'Warud' },
+                { Name: 'Suhas', City: 'Dhaga' },
+            { Name: 'Sanket', City: 'Amt' }]
+        }
+    </script>
+
+    <br />
+    <br />
+    Module Example -
+
+    <div ng-controller="MyController">
+        Filter by Name :
+        <input type="text" ng-model="filterText" />
+        <ul>
+            <li ng-repeat="fd in friends | filter:filterText | orderBy:'Name'">{{fd.Name }} - {{fd.City }}</li>
+        </ul>
+    </div>
+    <br />
+    <div ng-controller="OrderListController">{{Message}}</div>
+    <div ng-controller="AddNewOrderController">{{Message}}</div>
+    <div ng-view></div>
+    <script>
+        var demoApp = angular.module('demoApp', []);
+       
+        demoApp.config(['$routeProvider',
+        function ($routeProvider) {
+            $routeProvider.
+            when('/orders', {
+                templateUrl: '/OrderList.html',
+                controller: 'OrderListController'
+            }).
+            when('/addneworder', {
+                templateUrl: '/AddNewOrder.html',
+                controller: 'AddNewOrderController'
+            }).
+            otherwise({
+                redirectTo: '/orders'
+            });
+        }]);
+
+        var controllers = {};
+
+        controllers.MyController = function ($scope) {
+            $scope.friends = [{ Name: 'shrikant', City: 'Warud' },
+                { Name: 'umakant', City: 'Warud' },
+                { Name: 'Suhas', City: 'Dhaga' },
+            { Name: 'Sanket', City: 'Amt' }]
+        };
+
+        controllers.OrderListController = function ($scope) {
+            $scope.Message = 'I am showing you order lists';
+        };
+
+        controllers.AddNewOrderController = function ($scope) {
+            $scope.Message = 'I am encouraging you to add new order';
+        };
+
+        demoApp.controller(controllers);
+
+        //demoApp.config(['$routeProvider',
+        //    function ($routeProvider)
+        //    {
+        //        $routeProvider.
+        //        when('/orders', {
+        //            templateUrl: '/OrderList.html',
+        //            controller: 'OrderListController'
+        //        }).
+        //        when('/add-new-order', {
+        //            templateUrl: '/AddNewOrder.html',
+        //            controller: 'AddNewOrderController'
+        //        }).
+        //        otherwise({
+        //            redirectTo: '/orders'
+        //        });
+        //    }
+        //]);
+
+        
+    </script>
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>AngularJS Routing example</title>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 10px;
+            background-color: #F5F5F5;
+        }
+    </style>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body ng-app="demoApp">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <ul class="nav">
+                    <li><a href="#addneworder/0"> Add New Order </a></li>
+                    <li><a href="#orders"> Show Orders </a></li>
+                </ul>
+            </div>
+            <div class="col-md-9">
+                <div ng-view></div>
+            </div>
+        </div>
+    </div><!-- /.container -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+    <!--<script src="app.js"></script>-->
+    <script>
+        var demoApp = angular.module('demoApp', []);
+
+        demoApp.config(['$routeProvider',
+        function ($routeProvider) {
+            $routeProvider.
+            when('/orders', {
+                templateUrl: '/OrderList.html',
+                controller: 'OrderListController',
+                customData : 'Testing custom data passsing'
+            }).
+            when('/addneworder/:orderid', {
+                templateUrl: '/AddNewOrder.html',
+                controller: 'AddNewOrderController'
+            }).
+            otherwise({
+                redirectTo: '/orders'
+            });
+        }]);
+
+        demoApp.factory('OrderFactory', function(){
+
+            var fac = {};
+
+            fac.orders = [{ Name: 'O1', Price: 1.2 }, { Name: 'O2', Price: 1.5 }];
+
+            fac.GetOrders = function () {
+                return fac.orders;
+            };
+
+            fac.AddOrder = function (a, b) {
+                //var newOrder = {};
+                //newOrder.Name = a;
+                //newOrder.Price = b;
+
+                fac.orders.push({ Name: a, Price: b });
+            };
+
+            return fac;
+        });
+
+        var controllers = {};
+
+        controllers.MyController = function ($scope) {
+            $scope.friends = [{ Name: 'shrikant', City: 'Warud' },
+                { Name: 'umakant', City: 'Warud' },
+                { Name: 'Suhas', City: 'Dhaga' },
+            { Name: 'Sanket', City: 'Amt' }]
+        };
+
+        controllers.OrderListController = function ($scope, $route, OrderFactory) {
+            $scope.Message = 'I am showing you order lists';
+            $scope.CustomData = $route.current.customData;
+
+            $scope.Orders = OrderFactory.GetOrders();
+        };
+
+        controllers.AddNewOrderController = function ($scope, $routeParams, OrderFactory) {
+            $scope.Message = 'I am encouraging you to add new order';
+            $scope.orderid = $routeParams.orderid;
+
+            $scope.Name = '';
+            $scope.Price = 0;
+            $scope.AddNewOrder = function () {
+                OrderFactory.AddOrder($scope.Name, $scope.Price);
+            };
+        };
+
+        demoApp.controller(controllers);
+
+        demoApp.config(['$routeProvider',
+            function ($routeProvider)
+            {
+                $routeProvider.
+                when('/orders', {
+                    templateUrl: '/OrderList.html',
+                    controller: 'OrderListController'
+                }).
+                when('/add-new-order', {
+                    templateUrl: '/AddNewOrder.html',
+                    controller: 'AddNewOrderController'
+                }).
+                otherwise({
+                    redirectTo: '/orders'
+                });
+            }
+        ]);
+
+
+    </script>
+
+</body>
+</html>
